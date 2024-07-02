@@ -1,27 +1,28 @@
 const productService = require('../service/product.service');
+const helper = require('../../../helpers');
 
 module.exports = {
   getAllProducts: async (request, h) => {
     const { page = 1, limit = 10, q } = request.query;
     const offset = (page - 1) * limit;
-    const responseService = await productService.getAllProducts({
+    const response = await productService.getAllProducts({
       page,
       limit,
       offset,
       search: q
     });
-    const { status, ...response } = responseService
-    return h.response(response).code(status);
+
+    return helper.formatApiResponse(h, response);
   },
   getDetailProduct: async (request, h) => {
     const { product_id } = request.params;
-    const responseService = await productService.getDetailProduct({product_id});
-    const { status, ...response } = responseService;
-
-    return h.response(response).code(status);
+    const response = await productService.getDetailProduct({product_id});
+    return helper.formatApiResponse(h, response);
   },
   deleteProduct: async (request, h) => {
-  
+  const { product_id } = request.body;
+  const response = await productService.deleteProduct({product_id});
+  return helper.formatApiResponse(h, response);
   },
   importProduct: async (request, h) => {
 

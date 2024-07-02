@@ -55,5 +55,17 @@ module.exports = {
     `
     const result = await db.query(query, params);
     return result.rows;
-  }
+  },
+  deleteProductById: async ({ product_id }) => {
+    const params = [product_id, true];
+    const query = `
+      UPDATE ${TABLE_NAME.PRODUCT}
+      SET deleted_at = NOW(),
+      is_deleted = $1
+      WHERE id = $2
+      RETURNING *
+    `;
+    const result = await db.query(query, params);
+    return result.rows[0];  // Returning the deleted product if needed
+  },
 };

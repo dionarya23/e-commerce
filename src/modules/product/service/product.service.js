@@ -30,7 +30,16 @@ module.exports = {
     if (!result.length) return { status: 404, message: `product not found with id ${product_id}` }
    
     return {
+      status: 200,
+      message: 'Success get data',
       data: result[0]
+    }
+  },
+  deleteProduct: async ({product_id}) => {
+    const result = await productModel.deleteProductById({product_id});
+    return {
+      status: 200,
+      message: 'Success delete data',
     }
   }
 }
