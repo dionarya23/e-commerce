@@ -1,13 +1,22 @@
-const postgre = require('../../config/postgre')
+const postgres = require('../../config/postgres')
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: postgre.host,
-    database: postgre.db,
-    password: postgre.password,
-    port: postgre.port, 
-    host: postgre.host,
-    connectionTimeoutMillis: postgre.connectionLimit
+    user: postgres.user,
+    database: postgres.db,
+    password: postgres.password,
+    port: postgres.port, 
+    host: postgres.host,
+    connectionTimeoutMillis: postgres.connectionLimit
   });
+
+  pool
+    .connect()
+    .then(() => {
+      console.log('Connected to PostgreSQL database');
+    })
+    .catch((err) => {
+      console.error('Error connecting to PostgreSQL database', err);
+    });
   
 module.exports = pool;
