@@ -1,36 +1,32 @@
-const {
-  getAllProducts,
-  getDetailProduct,
-  deleteProduct,
-  importProduct,
-  upsertProduct
-} = require('../controller/product.controller');
+const ProductController = require('../controller/product.controller');
+
+const productController = new ProductController()
 
 const routes = [
   {
     method: 'GET',
     path: '/product',
-    handler: getAllProducts,
+    handler: productController.getAllProducts,
   },
   {
     method: 'GET',
     path: '/product/{product_id}',
-    handler: getDetailProduct,
+    handler: productController.getDetailProduct,
   },
   {
     method: 'DELETE',
     path: '/product/{product_id}',
-    handler: deleteProduct,
+    handler: productController.deleteProduct,
   },
   {
     method: 'GET',
     path: '/product/import',
-    handler: importProduct,
+    handler: productController.importProduct,
   },
   {
     method: 'POST',
     path: '/product',
-    handler: upsertProduct,
+    handler: productController.upsertProduct,
   }
 ];
 

@@ -1,45 +1,43 @@
-const productModel = require('../model/product.model')
+const ProductModel = require('../model/product.model');
+const ProductOutboundService = require('./product.outbound.service');
 
-module.exports = {
-  getAllProducts: async ({
-    page,
-    limit,
-    offset,
-    search,
-  }) => {
-    const result = await productModel.getAll({
-      limit,
-      offset,
-      search,
-    });
+class ProductService {
+  constructor() {
+    this.productModel = new ProductModel();
+    this.productOutboundService = new ProductOutboundService();
+  }
 
-    const resultCount = await productModel.getCount({
-      search,
-    });
+  async getAllProducts({ page, limit, offset, search }) {
+    const result = await this.productModel.getAll({ limit, offset, search });
+    const resultCount = await this.productModel.getCount({ search });
 
     return {
       status: 200,
       message: 'Success get data',
       page: parseInt(page),
       count: parseInt(resultCount),
-      data: result
+      data: result,
     };
-  },
-  getDetailProduct: async ({product_id}) => {
-    const result = await productModel.getById({product_id});
-    if (!result.length) return { status: 404, message: `product not found with id ${product_id}` }
-   
+  }
+
+  async getDetailProduct({ product_id }) {
+    const result = await this.productModel.getById({ product_id });
+    if (!result.length) return { status: 404, message: `Product not found with id ${product_id}` };
+
     return {
       status: 200,
       message: 'Success get data',
-      data: result[0]
-    }
-  },
-  deleteProduct: async ({product_id}) => {
-    const result = await productModel.deleteProductById({product_id});
+      data: result[0],
+    };
+  }
+
+  async deleteProduct({ product_id }) {
+    const result = await this.productModel.deleteProductById({ product_id });
     return {
       status: 200,
       message: 'Success delete data',
-    }
+    };
   }
 }
+
+module.exports = ProductService;
