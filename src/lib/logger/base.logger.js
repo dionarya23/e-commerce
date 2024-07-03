@@ -24,7 +24,7 @@ class BaseLogger {
 
   reCreateLogger(type, name) {
     const date = new Date();
-    const fileName = `./logs/e-commerce-${type}-${date.toISOString().substring(0, 10)}.log`;
+    const fileName = `./src/logs/e-commerce-${type}-${date.toISOString().substring(0, 10)}.log`;
 
     setTimeout(() => {
       this.latestLogger = this.reCreateLogger(type, name);

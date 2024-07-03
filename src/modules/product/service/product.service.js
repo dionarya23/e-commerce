@@ -1,5 +1,10 @@
 const ProductModel = require('../model/product.model');
 const ProductOutboundService = require('./product.outbound.service');
+const DBHelper = require('../../common/helpers/db.common.helper');
+const {
+  NOT_FOUND_CODE,
+  NOT_FOUND_MESSAGE
+} = require('../../../lib/errors/error.code')
 
 class ProductService {
   constructor() {
@@ -10,31 +15,32 @@ class ProductService {
   async getAllProducts({ page, limit, offset, search }) {
     const result = await this.productModel.getAll({ limit, offset, search });
     const resultCount = await this.productModel.getCount({ search });
+    DBHelper.throwResultErrorCode(result, NOT_FOUND_CODE, NOT_FOUND_MESSAGE);
+    DBHelper.throwResultErrorCode(resultCount);
 
     return {
-      status: 200,
       message: 'Success get data',
       page: parseInt(page),
       count: parseInt(resultCount),
-      data: result,
+      data: result.rows,
     };
   }
 
   async getDetailProduct({ product_id }) {
     const result = await this.productModel.getById({ product_id });
-    if (!result.length) return { status: 404, message: `Product not found with id ${product_id}` };
+    DBHelper.throwResultErrorOrEmpty(result);
 
     return {
-      status: 200,
       message: 'Success get data',
-      data: result[0],
-    };
+      data: result.rows[0],
+    }
   }
 
   async deleteProduct({ product_id }) {
     const result = await this.productModel.deleteProductById({ product_id });
+    DBHelper.throwResultErrorCode(result);
+
     return {
-      status: 200,
       message: 'Success delete data',
     };
   }

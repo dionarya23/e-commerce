@@ -1,27 +1,19 @@
-const InternalServerError = require('../errors/internal.server.error');
-const BadRequestError = require('../errors/bad.request.error');
+const Boom = require('@hapi/boom');
+const { INTERNAL_SERVER_ERROR_MESSAGE } = require('../../../lib/errors/error.code');
 
-export default class DBHelper {
-  static throwResultErrorOrEmpty(data, errorCode = 'DATA_IS_NOT_FOUND', errorMessage = 'Data is not found') {
-    if (data.errorCode) throw new InternalServerError(data);
-    return this.checkEmpty(data, errorCode, errorMessage);
+module.exports = class DBHelper {
+  static throwResultErrorOrEmpty(data, errorMessage = 'Data is not found') {
+    if (data.errorCode) throw Boom.internal(INTERNAL_SERVER_ERROR_MESSAGE);
+    return this.checkEmpty(data, errorMessage);
   }
 
-  static checkEmpty(data, errorCode, errorMessage) {
-    if (data.length === 0) throw new BadRequestError(errorCode, errorMessage);
-    return data[0];
+  static checkEmpty(data, errorMessage) {
+    if (data.rows.length === 0) throw Boom.notFound(errorMessage);
+    return data.rows;
   }
 
   static throwResultErrorCode(data) {
-    if (data.errorCode) throw new InternalServerError(data);
-    return data[0];
-  }
-
-  static throwResultsErrorCode(data) {
-    data.forEach((promise) => {
-      if (promise?.errorCode || promise?.error) {
-        throw new InternalServerError(promise);
-      }
-    });
+    if (data.errorCode) throw Boom.internal(INTERNAL_SERVER_ERROR_MESSAGE);
+    return data.rows;
   }
 }

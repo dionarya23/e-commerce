@@ -1,6 +1,5 @@
 const pool = require('../../../drivers/database');
 const Logger = require('../../../lib/logger/internal.logger');
-const InternalServerError = require('../errors/internal.server.error');
 const moment = require('moment');
 
 class DBCommonService {
@@ -14,7 +13,7 @@ class DBCommonService {
       return result;
     } catch (ex) {
       Logger().error(`Postgres Query Error : ${ex.code} - ${JSON.stringify(ex)}`);
-      throw new InternalServerError({ errorCode: ex.code, errorMessage: ex.message });
+      throw new Error(ex.message);
     }
   }
 

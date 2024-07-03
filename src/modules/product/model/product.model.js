@@ -29,7 +29,8 @@ class ProductService {
     }
 
     const result = await this.db.query(query, params);
-    return result.rows;
+    // console.log('result', result);
+    return result;
   }
 
   async getCount({ search }) {
@@ -59,7 +60,7 @@ class ProductService {
       WHERE id = $1
     `;
     const result = await this.db.query(query, params);
-    return result.rows;
+    return result;
   }
 
   async deleteProductById({ product_id }) {
