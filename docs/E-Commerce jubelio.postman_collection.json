@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "3dc6b103-c9f3-4542-9f94-83eea40b029f",
+		"name": "E-Commerce jubelio",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2338089"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4332/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4332/product/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Essence Mascara Lash\",\n    \"description\": \"The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.\",\n    \"sku\": \"RCH45Q1A\",\n    \"price\": 9.99,\n    \"image\": \"https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4332/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product By Sku",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4332/product/:sku",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"product",
+								":sku"
+							],
+							"variable": [
+								{
+									"key": "sku",
+									"value": "RCH45Q1A"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Import Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4332/product/import",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"product",
+								"import"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "get All Transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4332/transaction",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction By sku",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4332/transaction/:sku",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"transaction",
+								":sku"
+							],
+							"variable": [
+								{
+									"key": "sku",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sku\": \"1NBFK980\",\n    \"qty\": -1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4332/transaction",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete transaction by sku",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4332/transaction/:sku",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4332",
+							"path": [
+								"transaction",
+								":sku"
+							],
+							"variable": [
+								{
+									"key": "sku",
+									"value": "1NBFK980"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
