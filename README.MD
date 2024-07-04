@@ -58,8 +58,8 @@ This project is a simple implementation of an E-Commerce API using Node.js and H
 
 2. Clone this repository from GitHub:
 ```shell
-git clone https://github.com/username/repository.git
-cd repository
+git clone https://github.com/dionarya23/e-commerce.git
+cd e-commerce
 ```
 3. Install all dependencies:
 ```shell
