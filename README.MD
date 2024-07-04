@@ -9,7 +9,7 @@ This project is a simple implementation of an E-Commerce API using Node.js and H
 - **Node.js**: Runtime environment for running the server and backend logic.
 - **Hapi.js**: Framework for building web applications and APIs with Node.js.
 - **PostgreSQL**: Relational database management system for storing product and transaction data.
-- ***pino**: logging and debug
+- **pino**: logging and debug
 
 ## Main Features
 
