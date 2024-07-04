@@ -17,22 +17,32 @@ class ProductService {
   async getAllProducts({ page, limit, offset, search }) {
     const result = await this.productModel.getAll({ limit, offset, search });
     const resultCount = await this.productModel.getCount({ search });
+  
     DBHelper.throwResultErrorCode(result, NOT_FOUND_CODE, NOT_FOUND_MESSAGE);
     DBHelper.throwResultErrorCode(resultCount);
-
-    const parsedRows = result.rows.map(row => ({
-      ...row,
-      price: parseFloat(row.price),
-      stock: parseInt(row.stock, 10),
+  
+    const parsedRows = await Promise.all(result.rows.map(async row => {
+      const parsedRow = {
+        ...row,
+        price: parseFloat(row.price),
+        stock: parseInt(row.stock, 10),
+      };
+  
+      await this.productModel.updateStockBySku({
+        stock: parsedRow.stock,
+        sku: parsedRow.sku
+      });
+  
+      return parsedRow;
     }));
-
+  
     return {
       message: 'Success get data',
       page: parseInt(page),
       count: parseInt(resultCount),
       data: parsedRows,
     };
-  }
+  }  
 
   async getDetailProduct({ sku }) {
     const result = await this.productModel.getDetailBySku({ sku });
@@ -43,6 +53,11 @@ class ProductService {
         price: parseFloat(row.price),
         stock: parseInt(row.stock, 10),
       };
+    
+      await this.productModel.updateStockBySku({
+        stock: parsedRow.stock,
+        sku: parsedRow.sku
+      });
 
     return {
       message: 'Success get data',
@@ -98,7 +113,23 @@ class ProductService {
     return {
       message: `success ${productResult.rows.length ? 'update' : 'insert'} data`
     }
+  }
 
+  async importProduct() {
+    const externalProducts = await this.productOutboundService.getProducts();
+
+    for (const product of externalProducts) {
+      const { title, description, price, sku, thumbnail: image, stock } = product;
+
+      const existingProduct = await this.productModel.getProductBySku({ sku });
+      if (existingProduct.rows.length === 0) {
+        await this.productModel.createProduct({ title, sku, image, price, description, stock });
+      }
+    }
+
+    return {
+      message: 'success import products',
+    }
   }
 }
 

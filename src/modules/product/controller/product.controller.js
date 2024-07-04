@@ -34,7 +34,8 @@ class ProductController {
   }
 
   async importProduct(request, h) {
-    // Implementation for importing products
+    const response = await this.productService.importProduct();
+    return ResponseHandler.responseOK(h, response);
   }
 
   async upsertProduct(request, h) {

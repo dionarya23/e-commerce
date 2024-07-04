@@ -16,10 +16,11 @@ class ProductModel {
           sku,
           image, 
           price, 
-          stock,
           description
       FROM ${this.tableName}
       WHERE sku = $1
+      AND is_deleted = FALSE
+      AND deleted_at is NULL
     `;
     const result = await this.db.query(query, params);
     return result;
@@ -34,7 +35,7 @@ class ProductModel {
           p.sku, 
           p.image, 
           p.price, 
-          COALESCE(SUM(at.qty), 0) AS stock
+          (p.stock - COALESCE(SUM(at.qty), 0)) AS stock
         FROM ${this.tableName} p
         LEFT JOIN ${this.adjustmentTransactionsTableName} at ON p.id = at.product_id
         WHERE p.is_deleted = FALSE AND (at.is_deleted = FALSE OR at.is_deleted IS NULL)
@@ -78,7 +79,7 @@ class ProductModel {
         p.image, 
         p.price, 
         p.description,
-        COALESCE(SUM(at.qty), 0) AS stock
+        (p.stock - COALESCE(SUM(at.qty), 0)) AS stock
       FROM  ${this.tableName} p
       LEFT JOIN ${this.adjustmentTransactionsTableName} at ON p.id = at.product_id
       WHERE p.sku = $1 
@@ -108,17 +109,19 @@ class ProductModel {
     sku,
     image,
     price,
-    description
+    description,
+    stock = 0
   }) {
     const params = [
       title,
       sku,
       image,
       price,
-      description
+      description,
+      stock
     ]
 
-    const query = `INSERT INTO products (title, sku, image, price, description) VALUES ($1, $2, $3, $4, $5)`;
+    const query = `INSERT INTO  ${this.tableName} (title, sku, image, price, description, stock) VALUES ($1, $2, $3, $4, $5, $6)`;
     return await this.db.queryWithThrows(query, params);
   }
 
@@ -138,7 +141,23 @@ class ProductModel {
     ]
 
     const query = `
-       UPDATE products SET title = $1, image = $2, price = $3, description = $4 WHERE sku = $5
+       UPDATE  ${this.tableName} SET title = $1, image = $2, price = $3, description = $4 WHERE sku = $5
+    `;
+
+    return await this.db.update(query, params);
+  }
+  
+  async updateStockBySku({
+    sku,
+    stock
+  }) {
+    const params = [
+      stock,
+      sku
+    ]
+
+    const query = `
+       UPDATE ${this.tableName} SET stock = $1 WHERE sku = $2
     `;
 
     return await this.db.update(query, params);

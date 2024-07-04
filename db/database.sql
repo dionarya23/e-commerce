@@ -1,10 +1,11 @@
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    sku VARCHAR(100) UNIQUE NOT NULL,
+    sku VARCHAR(100) NOT NULL,
     image TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     description TEXT,
+    stock INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,

@@ -10,7 +10,7 @@ class PrescriptionOutboundService {
 
   async getProducts() {
     const response = await this.axiosCommonService.get('products');
-    return response;
+    return response.data.products;
   }
 
 }
