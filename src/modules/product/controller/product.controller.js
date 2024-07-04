@@ -22,14 +22,14 @@ class ProductController {
   }
 
   async getDetailProduct(request, h) {
-    const { product_id } = request.params;
-    const response = await this.productService.getDetailProduct({ product_id });
+    const { sku } = request.params;
+    const response = await this.productService.getDetailProduct({ sku });
     return ResponseHandler.responseOK(h, response);
   }
 
   async deleteProduct(request, h) {
-    const { product_id } = request.payload;
-    const response = await this.productService.deleteProduct({ product_id });
+    const { sku } = request.params;
+    const response = await this.productService.deleteProduct({ sku });
     return ResponseHandler.responseOK(h, response);
   }
 
@@ -38,7 +38,9 @@ class ProductController {
   }
 
   async upsertProduct(request, h) {
-    // Implementation for upserting products
+    const product = request.payload;
+    const response = await this.productService.upsertProduct(product);
+    return ResponseHandler.responseCreated(h, response);
   }
 }
 

@@ -9,12 +9,12 @@ const routes = [
   },
   {
     method: 'GET',
-    path: '/product/{product_id}',
+    path: '/product/{sku}',
     handler: productController.getDetailProduct.bind(productController),
   },
   {
     method: 'DELETE',
-    path: '/product/{product_id}',
+    path: '/product/{sku}',
     handler: productController.deleteProduct.bind(productController),
   },
   {

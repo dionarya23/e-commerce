@@ -1,6 +1,7 @@
 const pool = require('../../../drivers/database');
 const Logger = require('../../../lib/logger/internal.logger');
 const moment = require('moment');
+const Boom = require('@hapi/boom');
 
 class DBCommonService {
   async queryWithThrows(query, data = []) {
@@ -13,7 +14,7 @@ class DBCommonService {
       return result;
     } catch (ex) {
       Logger().error(`Postgres Query Error : ${ex.code} - ${JSON.stringify(ex)}`);
-      throw new Error(ex.message);
+      throw new Boom.internal(ex.message);
     }
   }
 

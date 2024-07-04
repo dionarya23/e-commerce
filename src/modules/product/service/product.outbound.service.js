@@ -8,7 +8,7 @@ class PrescriptionOutboundService {
     this.axiosCommonService = new AxiosCommonService(config);
   }
 
-  async importProduct() {
+  async getProducts() {
     const response = await this.axiosCommonService.get('products');
     return response;
   }

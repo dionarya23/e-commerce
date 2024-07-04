@@ -1,4 +1,5 @@
 const ProductModel = require('../model/product.model');
+const AdjustmentTransactionModel = require('../model/adjustment_transaction.model');
 const ProductOutboundService = require('./product.outbound.service');
 const DBHelper = require('../../common/helpers/db.common.helper');
 const {
@@ -9,6 +10,7 @@ const {
 class ProductService {
   constructor() {
     this.productModel = new ProductModel();
+    this.adjustmentTransactionModel = new AdjustmentTransactionModel();
     this.productOutboundService = new ProductOutboundService();
   }
 
@@ -18,31 +20,85 @@ class ProductService {
     DBHelper.throwResultErrorCode(result, NOT_FOUND_CODE, NOT_FOUND_MESSAGE);
     DBHelper.throwResultErrorCode(resultCount);
 
+    const parsedRows = result.rows.map(row => ({
+      ...row,
+      price: parseFloat(row.price),
+      stock: parseInt(row.stock, 10),
+    }));
+
     return {
       message: 'Success get data',
       page: parseInt(page),
       count: parseInt(resultCount),
-      data: result.rows,
+      data: parsedRows,
     };
   }
 
-  async getDetailProduct({ product_id }) {
-    const result = await this.productModel.getById({ product_id });
+  async getDetailProduct({ sku }) {
+    const result = await this.productModel.getDetailBySku({ sku });
     DBHelper.throwResultErrorOrEmpty(result);
+      const row = result.rows[0];
+      const parsedRow = {
+        ...row,
+        price: parseFloat(row.price),
+        stock: parseInt(row.stock, 10),
+      };
 
     return {
       message: 'Success get data',
-      data: result.rows[0],
+      data: parsedRow,
     }
   }
 
-  async deleteProduct({ product_id }) {
-    const result = await this.productModel.deleteProductById({ product_id });
-    DBHelper.throwResultErrorCode(result);
+  async deleteProduct({ sku }) {
+    const resultDeleteProduct = await this.productModel.deleteProductBySku({ sku });
+    DBHelper.throwResultErrorCode(resultDeleteProduct);
+
+    const resultDeleteAdjusmentTransaction = await this.adjustmentTransactionModel.deleteAdjustmentTransactionByProductId({
+      product_id: resultDeleteProduct.rows[0].id
+    });
+    DBHelper.throwResultErrorCode(resultDeleteAdjusmentTransaction);
+
 
     return {
       message: 'Success delete data',
     };
+  }
+
+  async upsertProduct({
+    title,
+    sku,
+    image,
+    price,
+    description
+  }) {
+    const productResult = await this.productModel.getProductBySku({sku});
+    DBHelper.throwResultErrorCode(productResult);
+
+    if (productResult.rows.length) {
+      const resultUpdate = await this.productModel.updateProduct({
+        title,
+        sku,
+        image,
+        price,
+        description
+      })
+      DBHelper.throwResultErrorCode(resultUpdate);
+    } else {
+      const resultInsert = await this.productModel.createProduct({
+        title,
+        sku,
+        image,
+        price,
+        description
+      })
+      DBHelper.throwResultErrorCode(resultInsert);
+    }
+
+    return {
+      message: `success ${productResult.rows.length ? 'update' : 'insert'} data`
+    }
+
   }
 }
 
