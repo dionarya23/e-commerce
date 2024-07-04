@@ -1,14 +1,42 @@
-module.exports = {
-  getAllTransactions: async (request, h) => {
+const TransactionService = require('../service/transaction.service');
+const ResponseHandler = require('../../common/helpers/format.response.common.helper');
 
-  },
-  getDetailTransaction: async (request, h) => {
+class TransactionController {
+  constructor() {
+    this.transactionService = new TransactionService();
+    this.responseHandler = new ResponseHandler();
+  }
 
-  },
-  deleteTransaction: async (request, h) => {
+  async getAllTransactions(request, h) {
+    const { page = 1, limit = 10 } = request.query;
+    const offset = (page - 1) * limit;
 
-  },
-  upsertTransaction: async (request, h) => {
-    
+    const response = await this.transactionService.getAllTransactions({
+      page,
+      limit,
+      offset,
+    });
+
+    return ResponseHandler.responseOK(h, response);
+  }
+
+  async getDetailTransaction(request, h) {
+    const { sku } = request.params;
+    const response = await this.transactionService.getDetailTransaction({ sku });
+    return ResponseHandler.responseOK(h, response);
+  }
+
+  async deleteTransaction(request, h) {
+    const { sku } = request.params;
+    const response = await this.transactionService.deleteTransaction({ sku });
+    return ResponseHandler.responseOK(h, response);
+  }
+
+  async upsertTransaction(request, h) {
+    const product = request.payload;
+    const response = await this.transactionService.upsertTransaction(product);
+    return ResponseHandler.responseCreated(h, response);
   }
 }
+
+module.exports = TransactionController;

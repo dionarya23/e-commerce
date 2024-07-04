@@ -37,7 +37,7 @@ class ProductModel {
           p.price, 
           (p.stock - COALESCE(SUM(at.qty), 0)) AS stock
         FROM ${this.tableName} p
-        LEFT JOIN ${this.adjustmentTransactionsTableName} at ON p.id = at.product_id
+        LEFT JOIN ${this.adjustmentTransactionsTableName} at ON p.sku = at.sku
         WHERE p.is_deleted = FALSE AND (at.is_deleted = FALSE OR at.is_deleted IS NULL)
     `;
 
@@ -67,7 +67,7 @@ class ProductModel {
     }
 
     const result = await this.db.query(query, params);
-    return result.rows[0].total;
+    return result;
   }
 
   async getDetailBySku({ sku }) {
@@ -81,7 +81,7 @@ class ProductModel {
         p.description,
         (p.stock - COALESCE(SUM(at.qty), 0)) AS stock
       FROM  ${this.tableName} p
-      LEFT JOIN ${this.adjustmentTransactionsTableName} at ON p.id = at.product_id
+      LEFT JOIN ${this.adjustmentTransactionsTableName} at ON p.sku = at.sku
       WHERE p.sku = $1 
       AND p.is_deleted = FALSE 
       AND (at.is_deleted = FALSE OR at.is_deleted IS NULL)
@@ -98,7 +98,7 @@ class ProductModel {
       SET deleted_at = CURRENT_TIMESTAMP,
       is_deleted = $1
       WHERE sku = $2
-      RETURNING id
+      RETURNING sku
     `;
     const result = await this.db.update(query, params);
     return result;
@@ -141,7 +141,9 @@ class ProductModel {
     ]
 
     const query = `
-       UPDATE  ${this.tableName} SET title = $1, image = $2, price = $3, description = $4 WHERE sku = $5
+       UPDATE  ${this.tableName} SET title = $1, image = $2, price = $3, description = $4 
+       WHERE sku = $5
+       AND is_deleted = false
     `;
 
     return await this.db.update(query, params);
@@ -158,6 +160,7 @@ class ProductModel {
 
     const query = `
        UPDATE ${this.tableName} SET stock = $1 WHERE sku = $2
+       and is_deleted=false
     `;
 
     return await this.db.update(query, params);

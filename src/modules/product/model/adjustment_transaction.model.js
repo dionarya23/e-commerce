@@ -7,12 +7,12 @@ class AdjustmentTransactionModel {
     this.db = new DBCommonService()
   }
 
-  async deleteAdjustmentTransactionByProductId({product_id}) {
-    const params = [product_id];
+  async deleteAdjustmentTransactionByProductId({sku}) {
+    const params = [sku];
     const query = `
-       UPDATE adjustment_transactions
+       UPDATE ${TABLE_NAME.ADJUSTMENT_TRANSACTIONS}
         SET is_deleted = TRUE, deleted_at = CURRENT_TIMESTAMP
-        WHERE product_id = $1 AND is_deleted = FALSE;
+        WHERE sku = $1 AND is_deleted = FALSE;
     `;
     const result = await this.db.query(query, params);
     return result;

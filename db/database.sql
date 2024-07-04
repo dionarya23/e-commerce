@@ -5,7 +5,7 @@ CREATE TABLE products (
     image TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     description TEXT,
-    stock INT DEFAULT 0,
+    stock INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,
@@ -14,9 +14,9 @@ CREATE TABLE products (
 
 CREATE TABLE adjustment_transactions (
     id SERIAL PRIMARY KEY,
-    product_id INT NOT NULL,
     sku VARCHAR(100) NOT NULL,
     qty INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,

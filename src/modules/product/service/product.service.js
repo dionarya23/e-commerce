@@ -39,7 +39,7 @@ class ProductService {
     return {
       message: 'Success get data',
       page: parseInt(page),
-      count: parseInt(resultCount),
+      count: parseInt(resultCount.rows[0].total),
       data: parsedRows,
     };
   }  
@@ -70,7 +70,7 @@ class ProductService {
     DBHelper.throwResultErrorCode(resultDeleteProduct);
 
     const resultDeleteAdjusmentTransaction = await this.adjustmentTransactionModel.deleteAdjustmentTransactionByProductId({
-      product_id: resultDeleteProduct.rows[0].id
+      sku: resultDeleteProduct.rows[0].sku
     });
     DBHelper.throwResultErrorCode(resultDeleteAdjusmentTransaction);
 
