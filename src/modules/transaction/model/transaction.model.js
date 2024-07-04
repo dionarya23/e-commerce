@@ -51,7 +51,7 @@ class TransactionModel {
     return result;
   }
 
-  async getDetailById({
+  async getDetailBySku({
     sku
   }) {
     const params = [sku];
@@ -68,6 +68,41 @@ class TransactionModel {
 
     const result = await this.db.query(query, params);
     return result;
+  }
+
+  async updateTransaction({
+    sku,
+    qty,
+    amount
+  }) {
+    const params = [
+      qty,
+      amount,
+      sku
+    ]
+
+    const query = `
+       UPDATE  ${this.tableName} SET qty = $1, amount = $2
+       WHERE sku = $3
+       AND is_deleted = false
+    `;
+
+    return await this.db.update(query, params);
+  }
+
+  async createTransaction({
+    sku,
+    qty,
+    amount
+  }) {
+    const params = [
+      sku,
+      qty,
+      amount
+    ];
+
+    const query = `INSERT INTO  ${this.tableName} (sku, qty, amount) VALUES ($1, $2, $3)`;
+    return await this.db.queryWithThrows(query, params);
   }
 }
 

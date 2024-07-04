@@ -28,11 +28,6 @@ class ProductService {
         stock: parseInt(row.stock, 10),
       };
   
-      await this.productModel.updateStockBySku({
-        stock: parsedRow.stock,
-        sku: parsedRow.sku
-      });
-  
       return parsedRow;
     }));
   
@@ -53,11 +48,6 @@ class ProductService {
         price: parseFloat(row.price),
         stock: parseInt(row.stock, 10),
       };
-    
-      await this.productModel.updateStockBySku({
-        stock: parsedRow.stock,
-        sku: parsedRow.sku
-      });
 
     return {
       message: 'Success get data',

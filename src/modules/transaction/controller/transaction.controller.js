@@ -33,8 +33,8 @@ class TransactionController {
   }
 
   async upsertTransaction(request, h) {
-    const product = request.payload;
-    const response = await this.transactionService.upsertTransaction(product);
+    const { sku, qty } = request.payload;
+    const response = await this.transactionService.upsertTransaction({ sku, qty });
     return ResponseHandler.responseCreated(h, response);
   }
 }
