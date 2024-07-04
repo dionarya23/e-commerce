@@ -71,8 +71,16 @@ npm install
 ### Running the Server
 1. Configure the `.env` file with appropriate settings, for example:
 ```
-PORT=3000
-DATABASE_URL=postgres://username@localhost:5432/database_name
+SERVER_PORT=3000
+SERVER_HOST=localhost
+
+#DB CONNECTION
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=root
+DB_PORT=5432
+DB_NAME=template1
+DB_POOL_CONNECTION_LIMIT=100
 ```
 
 2. Start the local server:
